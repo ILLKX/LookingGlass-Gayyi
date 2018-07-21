@@ -51,7 +51,7 @@ function createConfig()
 EOF
 
   for i in "${TEST[@]}"; do
-    echo "\$testFiles[] = '${i}';" >> "$DIR/$CONFIG"
+    echo "\$testFiles[] = '${i}MB';" >> "$DIR/$CONFIG"
   done
   echo -e "// Theme\n\$theme = '${THEME}';" >> "$DIR/$CONFIG"
 
@@ -161,6 +161,52 @@ EOF
 }
 
 ##
+# Fix besttrace on REHL based OS
+##
+function besttraceFix()
+{
+  # Check permissions for besttrace & Symbolic link
+  if [ $(stat --format="%a" /usr/bin/besttrace) -ne 4755 ] || [ ! -f "/usr/bin/besttrace" ]; then
+    if [ $(id -u) = "0" ]; then
+      echo 'Fixing besttrace permissions...'
+      chmod 4755 /usr/bin/besttrace
+    else
+      cat <<EOF
+
+##### IMPORTANT #####
+You are not root. Please log into root and run:
+chmod 4755 /usr/bin/besttrace
+#####################
+EOF
+    fi
+  fi
+}
+
+##
+# Fix geshihua on REHL based OS
+##
+function geshihuaFix()
+{
+  # Check permissions for traceroutegeshihua & Symbolic link
+  if [ $(id -u) = "0" ]; then
+      echo 'Fixing traceroutegeshihua permissions...'
+      chmod 4755 /usr/bin/traceroutegeshihua
+      chmod 4755 /usr/bin/tracerouteengeshihua
+      chmod 4755 /usr/bin/geshihua
+    else
+      cat <<EOF
+
+##### IMPORTANT #####
+You are not root. Please log into root and run:
+chmod 4755 /usr/bin/traceroutegeshihua
+chmod 4755 /usr/bin/tracerouteengeshihua
+chmod 4755 /usr/bin/geshihua
+#####################
+EOF
+    fi
+}
+
+##
 # Check and install script requirements
 ##
 function requirements()
@@ -256,7 +302,7 @@ function setup()
   read -e -p "Enter the servers location [${LOCATION}]: " LOC
   read -e -p "Enter the test IPv4 address [${IPV4}]: " IP4
   read -e -p "Enter the test IPv6 address (Re-enter everytime this script is run) [${IPV6}]: " IP6
-  read -e -p "Enter the size of test files in MB (Example: 25MB 50MB 100MB) [${TEST[*]}]: " T
+  read -e -p "Enter the size of test files in MB (Example: 25 50 100) [${TEST[*]}]: " T
   read -e -p "Do you wish to enable rate limiting of network commands? (y/n): " RATE
 
   # Check local vars aren't empty; Set new values
@@ -290,7 +336,7 @@ function setup()
     echo
     echo 'Removing old test files:'
     # Delete old test files
-    local REMOVE=($(ls ../*.test 2>/dev/null))
+    local REMOVE=($(ls *.test 2>/dev/null))
     for i in "${REMOVE[@]}"; do
       if [ -f "${i}" ]; then
         echo "Removing ${i}"
@@ -318,9 +364,9 @@ function testFiles()
 
   # Check for and/or create test file
   for i in "${TEST[@]}"; do
-    if [[ -n i ]] && [ ! -f "../${i}.test" ]; then
-      echo "Creating $i test file"
-      shred --exact --iterations=1 --size="${i}" - > "../${i}.test"
+    if [[ -n i ]] && [ ! -f "../${i}MB.test" ]; then
+      echo "Creating ${i}MB test file"
+      dd if=/dev/zero of=${i}MB.test bs=1M count=${i} 2>/dev/null
       A=$((A+1))
       sleep 1
     fi
@@ -443,6 +489,10 @@ THEME=
 
 # Install required scripts
 echo 'Checking script requirements:'
+cp $DIR/besttrace /usr/bin
+cp $DIR/geshihua /usr/bin
+cp $DIR/tracerouteengeshihua /usr/bin
+cp $DIR/traceroutegeshihua /usr/bin
 requirements
 echo
 # Read Config file
@@ -475,6 +525,8 @@ database
 # Check for RHEL mtr
 if [ "$INSTALL" = 'yum' ]; then
   mtrFix
+  besttraceFix
+  geshihuaFix
 fi
 # All done
 cat <<EOF
