@@ -202,7 +202,7 @@ class LookingGlass
         $traceCount = 0;
         $lastFail = 'start';
         // iterate stdout
-        while (($str = fgets($pipes[1], 1024)) != null) {
+        while (($str = fgets($pipes[1], 10240)) != null) {
             // check for output buffer
             if (ob_get_level() == 0) {
                 ob_start();
