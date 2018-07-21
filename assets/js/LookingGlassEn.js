@@ -18,19 +18,19 @@ $(document).ready(function() {
     // submit form
     else {
       // disable submit button + blank response
-      $('#submit').attr('disabled', 'true').text('测试中...');
+      $('#submit').attr('disabled', 'true').text('Loading...');
       $('#response').html();
 
       // call async request
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'ajax.php?' + data, true);
+      xhr.open('GET', 'ajaxen.php?' + data, true);
       xhr.send(null);
       var timer;
       timer = window.setInterval(function() {
         // on completion
         if (xhr.readyState == XMLHttpRequest.DONE) {
             window.clearTimeout(timer);
-            $('#submit').removeAttr('disabled').text('开始测试');
+            $('#submit').removeAttr('disabled').text('Run Test');
         }
 
         // show/hide results
