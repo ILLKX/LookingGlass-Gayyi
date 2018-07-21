@@ -124,7 +124,7 @@ class LookingGlass
     public function traceroute($host, $fail = 2)
     {
         if ($host = $this->validate($host)) {
-            return $this->procExecute('traceroute -4 -w2', $host, $fail);
+            return $this->procExecute('traceroutegeshihua', $host);
         }
         return false;
     }
@@ -222,27 +222,15 @@ class LookingGlass
             }
             // correct output for traceroute
             elseif ($type === 'traceroute') {
-                if ($match < 10 && preg_match('/^[0-9] /', $str, $string)) {
-                    $str = preg_replace('/^[0-9] /', '&nbsp;' . $string[0], $str);
-                    $match++;
-                }
-                // check for consecutive failed hops
-                if (strpos($str, '* * *') !== false) {
-                    $fail++;
-                    if ($lastFail !== 'start'
-                        && ($traceCount - 1) === $lastFail
-                        &&  $fail >= $failCount
-                    ) {
-                        echo str_pad($str . '<br />-- Traceroute timed out --<br />', 1024, ' ', STR_PAD_RIGHT);
-                        break;
-                    }
-                    $lastFail = $traceCount;
-                }
-                $traceCount++;
+                $str = html_entity_decode($str);
             }
 
             // pad string for live output
-            echo str_pad($str . '<br />', 1024, ' ', STR_PAD_RIGHT);
+            if ($type === 'traceroute') {
+                echo $str;
+            } else {
+                echo str_pad($str . '<br />', 1024, ' ', STR_PAD_RIGHT);
+            }
 
             // flush output buffering
             @ob_flush();
@@ -250,7 +238,7 @@ class LookingGlass
         }
 
         // iterate stderr
-        while (($err = fgets($pipes[2], 1024)) != null) {
+        while (($err = fgets($pipes[2], 10240)) != null) {
             // check for IPv6 hostname passed to IPv4 command, and vice versa
             if (strpos($err, 'Name or service not known') !== false || strpos($err, 'unknown host') !== false) {
                 echo 'Unauthorized request';
