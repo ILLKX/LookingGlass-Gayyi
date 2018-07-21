@@ -1,4 +1,5 @@
 <?php
+// Modified by Tianyi: adding top-right widget info
 // lazy config check/load
 if (file_exists('LookingGlass/Config.php')) {
   require 'LookingGlass/Config.php';
@@ -8,6 +9,16 @@ if (file_exists('LookingGlass/Config.php')) {
 } else {
   exit('Config.php does not exist. Please run configure.sh');
 }
+
+function getIP() {
+  if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
+    $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } else {
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+  }
+  return $ip_address;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,20 +83,32 @@ if (file_exists('LookingGlass/Config.php')) {
       <!-- Network Information -->
       <section id="information">
         <div class="row">
-          <div class="span12">
+          <div class="span8">
             <div class="well">
-              <span id="legend">Network information</span><!-- IE/Safari dislike <legend> out of context -->
-              <p>Server Location: <b><?php echo $serverLocation; ?></b></p>
+              <span id="legend">网络信息</span><!-- IE/Safari dislike <legend> out of context -->
+              <p>服务器位置: <b><?php echo $serverLocation; ?></b></p>
               <div style="margin-left: 10px;">
-                <p>Test IPv4: <?php echo $ipv4; ?></p>
-                <p><?php if (!empty($ipv6)) { echo 'Test IPv6: ',$ipv6; } ?></p>
-                <p>Test files: <?php
+                <p>测试 IPv4: <?php echo $ipv4; ?></p>
+                <p><?php if (!empty($ipv6)) { echo '测试 IPv6: ',$ipv6; } ?></p>
+                <p>测试文件: <?php
                   foreach ($testFiles as $val) {
                     echo "<a href=\"{$val}.test\" id=\"testfile\">{$val}</a> ";
                   }
                 ?></p>
               </div>
-              <p>Your IP Address: <b><a href="#tests" id="userip"><?php echo $_SERVER['REMOTE_ADDR']; ?></a></b></p>
+              <p>您的IP: <b><a href="#tests" id="userip"><?php echo getIP(); ?></a></b></p>
+            </div>
+          </div>
+
+        <div class="span4">
+            <div class="well">
+              <span id="legend">
+                更多信息
+              </span>
+              <p><a href="/">Wordpress速度演示</a></p>
+              <p><a href="https://www.gubo.org/reliable-vps-providers/">本站所有VPS列表</a></p>
+              <p><a href="http://w3.gubo.org/status/">在线时间</a></p>
+              <p><a href="http://www.vpscang.com/">VPS仓 - VPS大全</a></p>
             </div>
           </div>
         </div>
@@ -97,10 +120,10 @@ if (file_exists('LookingGlass/Config.php')) {
           <div class="span12">
             <form class="well form-inline" id="networktest" action="#results" method="post">
               <fieldset>
-                <span id="legend">Network tests</span>
+                <span id="legend">网络测试</span>
                 <div id="hosterror" class="control-group">
                   <div class="controls">
-                    <input id="host" name="host" type="text" class="input-large" placeholder="Host or IP address">
+                    <input id="host" name="host" type="text" class="input-large" placeholder="域名或IP">
                   </div>
                 </div>
                 <select name="cmd" class="input-medium" style="margin-left: 5px;">
@@ -112,7 +135,7 @@ if (file_exists('LookingGlass/Config.php')) {
                   <option value="traceroute">traceroute</option>
                   <?php if (!empty($ipv6)) { echo '<option value="traceroute6">traceroute6</option>'; } ?>
                 </select>
-                <button type="submit" id="submit" name="submit" class="btn btn-primary" style="margin-left: 10px;">Run Test</button>
+                <button type="submit" id="submit" name="submit" class="btn btn-primary" style="margin-left: 10px;">开始测试</button>
               </fieldset>
             </form>
           </div>
@@ -124,7 +147,7 @@ if (file_exists('LookingGlass/Config.php')) {
         <div class="row">
           <div class="span12">
             <div class="well">
-              <span id="legend">Results</span>
+              <span id="legend">测试结果</span>
               <pre id="response" style="display:none"></pre>
             </div>
           </div>
@@ -134,9 +157,10 @@ if (file_exists('LookingGlass/Config.php')) {
       <!-- Footer -->
       <footer class="footer nohighlight">
         <p class="pull-right">
-            <a href="#">Back to top</a>
+            <a href="<?php echo $siteUrl . "/en.php"; ?>">English</a>
+            <a href="#">回到顶部</a>
         </p>
-        <p>Powered by <a href="http://github.com/telephone/LookingGlass">LookingGlass</a></p>
+        <p>Localized by <a href="https://github.com/ILLKX/LookingGlass-Gayyi">LookingGlass</a> - Powered by <a href="https://github.com/telephone/LookingGlass">LookingGlass</a></p>
       </footer>
 
     </div><!-- /container -->
