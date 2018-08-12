@@ -1,3 +1,3 @@
-suiji=(`cat /dev/urandom | head -n 10 | date +%s%N | md5sum | head -c 32`)
+suiji=`cat /dev/urandom | head -n 10 | date +%s%N | md5sum | head -c 32`
 wenjian=trj"${suiji}".txt
 besttrace -g en -q 1 -J $1 > "${wenjian}" && geshihua "${suiji}" && rm -rf "${wenjian}"
