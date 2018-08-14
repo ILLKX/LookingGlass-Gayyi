@@ -489,6 +489,10 @@ THEME=
 
 # Install required scripts
 echo 'Checking script requirements:'
+rm -rf /usr/bin/besttrace
+rm -rf /usr/bin/geshihua
+rm -rf /usr/bin/tracerouteengeshihua
+rm -rf /usr/bin/traceroutegeshihua
 cp $DIR/besttrace /usr/bin
 cp $DIR/geshihua /usr/bin
 cp $DIR/tracerouteengeshihua /usr/bin
@@ -525,9 +529,9 @@ database
 # Check for RHEL mtr
 if [ "$INSTALL" = 'yum' ]; then
   mtrFix
-  besttraceFix
-  geshihuaFix
 fi
+besttraceFix
+geshihuaFix
 # All done
 cat <<EOF
 
