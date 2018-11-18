@@ -1,3 +1,5 @@
+**请大佬们不要随便对待site url，如果您的LookingGlass直接通过域名访问，请在site url里面填写http://xxx.com (最后不要加"/") 或者https://xxx.com (最后不要加"/")，如果LookingGlass放置在域名目录下的某个文件夹，请在site url里面填写http://xxx.com/xxx (最后不要加"/") 或者https://xxx.com/xxx (最后不要加"/")**
+
 # LookingGlass
 
 ## Overview
