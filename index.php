@@ -160,7 +160,7 @@ function getIP() {
             <a href="<?php echo $siteUrl . "/en.php"; ?>">English</a>
             <a href="#">回到顶部</a>
         </p>
-        <p>Localized by <a href="https://github.com/ILLKX/LookingGlass-Gayyi">LookingGlass</a> - Powered by <a href="https://github.com/telephone/LookingGlass">LookingGlass</a></p>
+        <p>Modified by <a href="https://github.com/ILLKX/LookingGlass-Gayyi">LookingGlass</a> - Powered by <a href="https://github.com/telephone/LookingGlass">LookingGlass</a></p>
       </footer>
 
     </div><!-- /container -->
