@@ -11,6 +11,10 @@ Current version: v1.3.0
 
 It's recommended that everyone updates their existing install!
 
+## Demo
+
+[https://lggayyi.test.testip.xyz](https://lggayyi.test.testip.xyz)
+
 ## Features
 
 * Automated install via bash script
